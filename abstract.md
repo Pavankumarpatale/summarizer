@@ -13,7 +13,7 @@
 | 160121771127 | Sri Guru Datta Pisupati |           |
 | 160121771307 | Patale Pavan Kumar      |           |
 
-### NAME OF THE PROJECT COORDINATOR : Dr. K Ramana Sir
+### NAME OF THE PROJECT COORDINATOR : Dr. S Sathappan
 
 ## ABSTRACT
 
