@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Button } from './Button'
-import { type ChatGPTMessage, ChatLine, LoadingChatLine } from './ChatLine'
+import { type Message, ChatLine, LoadingChatLine } from './ChatLine'
 import { useCookies } from 'react-cookie'
 
 const COOKIE_NAME = 'nextjs-example-ai-chat-gpt3'
 
 // default first message to display in UI (not necessary to define the prompt)
-export const initialMessages: ChatGPTMessage[] = [
+export const initialMessages: Message[] = [
   {
     role: 'assistant',
-    content: 'Hi! I am a friendly AI assistant. Ask me anything!',
+    content: 'Hi! I am a friendly AI assistant. Ask me anything! I can summarize your text and answer questions.',
   },
 ]
 
@@ -45,7 +45,7 @@ const InputMessage = ({ input, setInput, sendMessage }: any) => (
 )
 
 export function Chat() {
-  const [messages, setMessages] = useState<ChatGPTMessage[]>(initialMessages)
+  const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [cookie, setCookie] = useCookies([COOKIE_NAME])
@@ -63,7 +63,7 @@ export function Chat() {
     setLoading(true)
     const newMessages = [
       ...messages,
-      { role: 'user', content: message } as ChatGPTMessage,
+      { role: 'user', content: message } as Message,
     ]
     setMessages(newMessages)
     const last10messages = newMessages.slice(-10) // remember last 10 messages
@@ -106,7 +106,7 @@ export function Chat() {
 
       setMessages([
         ...newMessages,
-        { role: 'assistant', content: lastMessage } as ChatGPTMessage,
+        { role: 'assistant', content: lastMessage } as Message,
       ])
 
       setLoading(false)

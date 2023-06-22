@@ -4,10 +4,10 @@ import Balancer from 'react-wrap-balancer'
 // wrap Balancer to remove type errors :( - @TODO - fix this ugly hack
 const BalancerWrapper = (props: any) => <Balancer {...props} />
 
-type ChatGPTAgent = 'user' | 'system' | 'assistant'
+type ChatAgent = 'user' | 'system' | 'assistant'
 
-export interface ChatGPTMessage {
-  role: ChatGPTAgent
+export interface Message {
+  role: ChatAgent
   content: string
 }
 
@@ -42,7 +42,7 @@ const convertNewLines = (text: string) =>
     </span>
   ))
 
-export function ChatLine({ role = 'assistant', content }: ChatGPTMessage) {
+export function ChatLine({ role = 'assistant', content }: Message) {
   if (!content) {
     return null
   }
