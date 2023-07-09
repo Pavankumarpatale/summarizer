@@ -1,0 +1,97 @@
+/* ChatLine component */
+.float-right {
+  text-align: right;
+}
+
+.float-left {
+  text-align: left;
+}
+
+.ChatLine {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.ChatLine.assistant {
+  justify-content: flex-end;
+}
+
+.ChatLine .message-container {
+  background-color: #F4F4F4;
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ChatLine.assistant .message-container {
+  background-color: #DCF8C6;
+}
+
+.ChatLine.user .message-container {
+  background-color: #D9EFFF;
+}
+
+.ChatLine .message-container p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* LoadingChatLine component */
+.LoadingChatLine {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.LoadingChatLine .message-container {
+  width: 100px;
+  height: 20px;
+  background-color: #F4F4F4;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: #F4F4F4;
+  }
+  50% {
+    background-color: #E8E8E8;
+  }
+  100% {
+    background-color: #F4F4F4;
+  }
+}
+
+/* Chat component */
+.Chat {
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.Chat .input-container {
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.Chat .input-container input {
+  flex: 1;
+  border: none;
+  background-color: #F4F4F4;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 14px;
+}
+
+.Chat .input-container button {
+  margin-left: 0.5rem;
+  background-color: #007BFF;
+  color: #FFF;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 14px;
+  cursor: pointer;
+}

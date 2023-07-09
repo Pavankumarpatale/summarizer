@@ -1,120 +1,131 @@
-import { useEffect, useState } from 'react'
-import { Button } from './Button'
-import { type Message, ChatLine, LoadingChatLine } from './ChatLine'
-import { useCookies } from 'react-cookie'
+// Chat.tsx
+import React, { useEffect, useState } from 'react';
+import { Button } from './Button';
+import { ChatLine, LoadingChatLine } from './ChatLine';
+import styles from '../styles/styles.module.css';
 
-const COOKIE_NAME = 'nextjs-example-ai-chat-gpt3'
+type ChatAgent = 'user' | 'system' | 'assistant';
 
-// default first message to display in UI (not necessary to define the prompt)
+export interface Message {
+  role: ChatAgent;
+  content: string;
+}
+
 export const initialMessages: Message[] = [
   {
     role: 'assistant',
     content: 'Hi! I am a friendly AI assistant. Ask me anything! I can summarize your text and answer questions.',
   },
-]
+];
 
-const InputMessage = ({ input, setInput, sendMessage }: any) => (
-  <div className="mt-6 flex clear-both">
-    <input
-      type="text"
-      aria-label="chat input"
-      required
-      className="min-w-0 flex-auto appearance-none rounded-md border border-zinc-900/10 bg-white px-3 py-[calc(theme(spacing.2)-1px)] shadow-md shadow-zinc-800/5 placeholder:text-zinc-400 focus:border-teal-500 focus:outline-none focus:ring-4 focus:ring-teal-500/10 sm:text-sm"
-      value={input}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter') {
-          sendMessage(input)
-          setInput('')
-        }
-      }}
-      onChange={(e) => {
-        setInput(e.target.value)
-      }}
-    />
-    <Button
-      type="submit"
-      className="ml-4 flex-none"
-      onClick={() => {
-        sendMessage(input)
-        setInput('')
-      }}
-    >
-      Say
-    </Button>
-  </div>
-)
+const InputMessage: React.FC<{ input: string; setInput: React.Dispatch<React.SetStateAction<string>>; sendMessage: (message: string) => void }> = ({ input, setInput, sendMessage }) => {
+  const [lengthPenalty, setLengthPenalty] = useState(0.8);
+  const [maxLength, setMaxLength] = useState(128);
 
-export function Chat() {
-  const [messages, setMessages] = useState<Message[]>(initialMessages)
-  const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [cookie, setCookie] = useCookies([COOKIE_NAME])
+  return (
+    <div className={styles['input-container']}>
+      <div className={styles['input-fields']}>
+        <label htmlFor="lengthPenaltyInput">Length Penalty:</label>
+        <input
+          id="lengthPenaltyInput"
+          type="number"
+          step="0.1"
+          min="0"
+          value={lengthPenalty}
+          onChange={(e) => setLengthPenalty(Number(e.target.value))}
+          className={styles['input-field']}
+        />
+        <label htmlFor="maxLengthInput">Max Length:</label>
+        <input
+          id="maxLengthInput"
+          type="number"
+          min="1"
+          max="512"
+          value={maxLength}
+          onChange={(e) => setMaxLength(Number(e.target.value))}
+          className={styles['input-field']}
+        />
+      </div>
+      <div className={styles['input-button']}>
+        <input
+          type="text"
+          aria-label="chat input"
+          required
+          className={styles['input-field']}
+          value={input}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              sendMessage(input);
+              setInput('');
+            }
+          }}
+          onChange={(e) => {
+            setInput(e.target.value);
+          }}
+        />
+        <Button
+          type="submit"
+          className={styles['say-button']}
+          onClick={() => {
+            sendMessage(input);
+            setInput('');
+          }}
+        >
+          Say
+        </Button>
+      </div>
+    </div>
+  );
+};
 
-  useEffect(() => {
-    if (!cookie[COOKIE_NAME]) {
-      // generate a semi random short id
-      const randomId = Math.random().toString(36).substring(7)
-      setCookie(COOKIE_NAME, randomId)
-    }
-  }, [cookie, setCookie])
-
-  // send message to API /api/chat endpoint
+export const Chat: React.FC = () => {
+  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
   const sendMessage = async (message: string) => {
-    setLoading(true)
-    const newMessages = [
+    setLoading(true);
+    const newMessages: Message[] = [
       ...messages,
-      { role: 'user', content: message } as Message,
-    ]
-    setMessages(newMessages)
-    const last10messages = newMessages.slice(-10) // remember last 10 messages
+      { role: 'user', content: message },
+    ];
+    setMessages(newMessages);
+    const last100messages = newMessages.slice(-100); // remember last 100 messages
 
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        messages: last10messages,
-        user: cookie[COOKIE_NAME],
-      }),
-    })
+    try {
+      const response = await fetch('http://localhost:8080/summarize/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: message,
+          config: {
+            length_penalty: 0.8,
+            num_beams: 8,
+            max_length: 128,
+          },
+        }),
+      });
 
-    console.log('Edge function returned.')
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
 
-    if (!response.ok) {
-      throw new Error(response.statusText)
-    }
-
-    // This data is a ReadableStream
-    const data = response.body
-    if (!data) {
-      return
-    }
-
-    const reader = data.getReader()
-    const decoder = new TextDecoder()
-    let done = false
-
-    let lastMessage = ''
-
-    while (!done) {
-      const { value, done: doneReading } = await reader.read()
-      done = doneReading
-      const chunkValue = decoder.decode(value)
-
-      lastMessage = lastMessage + chunkValue
+      const data = await response.json();
 
       setMessages([
         ...newMessages,
-        { role: 'assistant', content: lastMessage } as Message,
-      ])
-
-      setLoading(false)
+        { role: 'assistant', content: data.summary },
+      ]);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="rounded-2xl border-zinc-100  lg:border lg:p-6">
+    <div className={styles['chat-container']}>
       {messages.map(({ content, role }, index) => (
         <ChatLine key={index} role={role} content={content} />
       ))}
@@ -122,7 +133,7 @@ export function Chat() {
       {loading && <LoadingChatLine />}
 
       {messages.length < 2 && (
-        <span className="mx-auto flex flex-grow text-gray-600 clear-both">
+        <span className={styles['initial-message']}>
           Type a message to start the conversation
         </span>
       )}
@@ -132,5 +143,5 @@ export function Chat() {
         sendMessage={sendMessage}
       />
     </div>
-  )
-}
+  );
+};

@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask_cors import CORS
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+from transformers import pipeline, AutoTokenizer
 
 app = Flask(__name__)
 CORS(app=app)
@@ -13,22 +13,39 @@ model = AutoModelForSeq2SeqLM.from_pretrained("pegasus-samsum-model")
 def hello():
     return "<p>Hello World</p>"
 
+
+tokenizer = AutoTokenizer.from_pretrained("tokenizer")
+pipe = pipeline("summarization", model="pegasus-samsum-model", tokenizer=tokenizer)
+
+
 @app.route("/summarize/", methods=["POST"])
 def summarize_wrapper():
-    text = request.form.get("text")
-    return summarize_text(text)
+    request_data = request.get_json()
+    input_text = request_data["text"]
+    config = request_data.get("config", {})
 
-def summarize_text(input_text):
-    # Tokenize the input text
-    input_ids = tokenizer.encode(input_text, truncation=True, max_length=1024, return_tensors="pt")
+    length_penalty = config.get("length_penalty", 0.8)
+    num_beams = config.get("num_beams", 8)
+    max_length = config.get("max_length", 128)
 
+    pipe = pipeline(
+        "summarization",
+        model="pegasus-samsum-model",
+        tokenizer=tokenizer,
+        length_penalty=length_penalty,
+        num_beams=num_beams,
+        max_length=max_length,
+    )
+
+    summary = summarize_text(input_text, pipe)
+    return {"summary": summary}
+
+
+def summarize_text(input_text, pipe):
     # Generate the summary
-    summary_ids = model.generate(input_ids.to(model.device))
+    summary = pipe(input_text, truncation=True, max_length=1024)[0]["summary_text"]
+    return summary
 
-    # Decode the summary
-    summarized_text = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
-
-    return summarized_text
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
