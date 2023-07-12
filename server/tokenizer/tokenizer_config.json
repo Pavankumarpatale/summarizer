@@ -108,7 +108,7 @@
   "full_tokenizer_file": null,
   "mask_token": "<mask_2>",
   "mask_token_sent": "<mask_1>",
-  "model_max_length": 1024,
+  "model_max_length": 16384,
   "offset": 103,
   "pad_token": "<pad>",
   "sp_model_kwargs": {},

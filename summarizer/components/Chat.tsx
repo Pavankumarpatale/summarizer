@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from './Button';
+import { Button } from '@vercel/examples-ui';
 import { ChatLine, LoadingChatLine } from './ChatLine';
 import styles from '../styles/styles.module.css';
 
@@ -13,38 +13,13 @@ export interface Message {
 export const initialMessages: Message[] = [
   {
     role: 'assistant',
-    content: 'Hi! I am a friendly AI assistant. Ask me anything! I can summarize your text and answer questions.',
+    content: 'Hi! I am a friendly AI assistant. Ask me anything! I can summarize your text and answer questions. Type a message to start the conversation',
   },
 ];
 
-const InputMessage: React.FC<{ input: string; setInput: React.Dispatch<React.SetStateAction<string>>; sendMessage: (message: string) => void }> = ({ input, setInput, sendMessage }) => {
-  const [lengthPenalty, setLengthPenalty] = useState(0.8);
-  const [maxLength, setMaxLength] = useState(128);
-
+const InputMessage: React.FC<{ input: string; setInput: React.Dispatch<React.SetStateAction<string>>; sendMessage: (message: string) => void; }> = ({ input, setInput, sendMessage }) => {
   return (
-    <div className={styles['input-container']}>
-      <div className={styles['input-fields']}>
-        <label htmlFor="lengthPenaltyInput">Length Penalty:</label>
-        <input
-          id="lengthPenaltyInput"
-          type="number"
-          step="0.1"
-          min="0"
-          value={lengthPenalty}
-          onChange={(e) => setLengthPenalty(Number(e.target.value))}
-          className={styles['input-field']}
-        />
-        <label htmlFor="maxLengthInput">Max Length:</label>
-        <input
-          id="maxLengthInput"
-          type="number"
-          min="1"
-          max="512"
-          value={maxLength}
-          onChange={(e) => setMaxLength(Number(e.target.value))}
-          className={styles['input-field']}
-        />
-      </div>
+    <div className={`${styles['chat-container']} chat ${styles['input-container']}`}>
       <div className={styles['input-button']}>
         <input
           type="text"
@@ -77,6 +52,7 @@ const InputMessage: React.FC<{ input: string; setInput: React.Dispatch<React.Set
   );
 };
 
+
 export const Chat: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState('');
@@ -91,7 +67,7 @@ export const Chat: React.FC = () => {
     const last100messages = newMessages.slice(-100); // remember last 100 messages
 
     try {
-      const response = await fetch('https://summarize//post request', {
+      const response = await fetch('http://localhost:8080/summarize/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,9 +75,9 @@ export const Chat: React.FC = () => {
         body: JSON.stringify({
           text: message,
           config: {
-            length_penalty: 0.8,
+            length_penalty: 1.2,
             num_beams: 8,
-            max_length: 128,
+            max_length: 512,
           },
         }),
       });
@@ -125,17 +101,14 @@ export const Chat: React.FC = () => {
 
   return (
     <div className={styles['chat-container']}>
-      {messages.map(({ content, role }, index) => (
-        <ChatLine key={index} role={role} content={content} />
-      ))}
+      <div className={styles['chat']}>
+        {messages.map(({ content, role }, index) => (
+          <ChatLine key={index} role={role} content={content} />
+        ))}
+      </div>
 
       {loading && <LoadingChatLine />}
 
-      {messages.length < 2 && (
-        <span className={styles['initial-message']}>
-          Type a message to start the conversation
-        </span>
-      )}
       <InputMessage
         input={input}
         setInput={setInput}

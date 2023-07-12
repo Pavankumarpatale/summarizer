@@ -1,97 +1,160 @@
-/* ChatLine component */
-.float-right {
-  text-align: right;
-}
-
-.float-left {
-  text-align: left;
-}
-
-.ChatLine {
-  margin-bottom: 1rem;
+/* Chat Container */
+.chat-container {
   display: flex;
-  justify-content: flex-start;
-}
-
-.ChatLine.assistant {
+  flex-direction: column;
+  min-height: 87.5vh;
+  min-width: 80vw;
+  max-width: 100vw;
   justify-content: flex-end;
+  box-sizing: border-box;
+  background-color: #2e3440;
+  /* Frost */
+  border: none;
+  /* Remove border */
 }
 
-.ChatLine .message-container {
-  background-color: #F4F4F4;
-  border-radius: 12px;
-  padding: 0.5rem 1rem;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+.container {
+  font-size: larger;
 }
 
-.ChatLine.assistant .message-container {
-  background-color: #DCF8C6;
+/* Chat */
+.chat {
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-left: 4vw;
+  padding-right: 4vw;
 }
 
-.ChatLine.user .message-container {
-  background-color: #D9EFFF;
+/* Chat Line */
+.chat-line {
+  max-width: 100vw;
+  display: flex;
+  align-items: flex-start;
+  /* margin-bottom: 10px; */
 }
 
-.ChatLine .message-container p {
+.chat-line .role-label {
   margin: 0;
-  font-size: 14px;
-  line-height: 1.5;
+  font-weight: bold;
+  color: #add6fff3;
+  /* Snow Storm */
 }
 
-/* LoadingChatLine component */
-.LoadingChatLine {
-  display: flex;
-  justify-content: flex-end;
+.chat-line .message-text {
+  margin: 0;
+  color: #d8dee9;
+  /* Light gray */
 }
 
-.LoadingChatLine .message-container {
-  width: 100px;
-  height: 20px;
-  background-color: #F4F4F4;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    background-color: #F4F4F4;
-  }
-  50% {
-    background-color: #E8E8E8;
-  }
-  100% {
-    background-color: #F4F4F4;
-  }
-}
-
-/* Chat component */
-.Chat {
-  border: 1px solid #E5E5E5;
-  border-radius: 8px;
-  padding: 1rem;
-}
-
-.Chat .input-container {
+/* Loading Chat Line */
+.loading-chat-line {
   display: flex;
   align-items: center;
-  margin-top: 1rem;
+  justify-content: center;
+  margin-bottom: 10px;
 }
 
-.Chat .input-container input {
-  flex: 1;
+/* Input Container */
+.input-container {
+  display: flex;
+  flex-direction: column;
+  padding-left: 2vw;
+  padding-right: 2vw;
+  background-color: #3b4252;
+  /* Frost */
+  width: 100%;
+  min-height: min-content;
   border: none;
-  background-color: #F4F4F4;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-size: 14px;
+  /* Remove border */
 }
 
-.Chat .input-container button {
-  margin-left: 0.5rem;
-  background-color: #007BFF;
-  color: #FFF;
+.input-fields {
+  display: flex;
+  align-items: center;
+  /* margin-bottom: 10px; */
+}
+
+.input-fields label {
+  /* margin-right: 10px;
+  margin-left: 10px; */
+  color: #d8dee9;
+  /* Light gray */
+}
+
+.input-field {
+  width: 90vw;
+  padding: 5px;
+  background-color: #4c566a;
+  /* Frost */
+  color: #d8dee9;
+  /* Light gray */
   border: none;
+  /* Remove border */
   border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-size: 14px;
+}
+
+.input-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 70vw;
+}
+
+.say-button {
+  background-color: #81a1c1;
+  /* Snow Storm */
+  color: #eceff4;
+  /* Lighter gray */
+  padding: 8px 8px;
+  border-radius: 4px;
   cursor: pointer;
+  border: none;
+  /* Remove border */
+}
+
+.say-button:hover {
+  background-color: #5e81ac;
+  /* Darker blue */
+}
+
+.say-button:active {
+  background-color: #4c566a;
+  /* Darker gray */
+}
+
+/* Nav Header */
+.nav-header {
+  font-size: x-large;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 10vh;
+  background-color: #2e3440;
+  /* Frost */
+  color: #d8dee9;
+  /* Light gray */
+}
+
+/* Home Page */
+.home-page {
+  background-color: #2e3440;
+  /* Frost */
+  align-items: center;
+  justify-content: center;
+  color: #cfcfcf;
+  /* Light gray */
+}
+
+.home-page>* {
+  /* margin-bottom: 2rem; */
+  max-width: 100vw;
+  max-height: 100vh;
+  border: none;
+  border-bottom: none;
+  padding: 0;
+  margin: 0;
+  font-family: 'Ubuntu', sans-serif;
 }

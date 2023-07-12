@@ -1,24 +1,22 @@
-import { Text, Page } from '@vercel/examples-ui'
-import { Chat } from '../components/Chat'
-import { Layout } from '../components/layout'
-
+import { Text, Page, Layout } from '@vercel/examples-ui';
+import { Chat } from '../components/Chat';
+import styles from '../styles/styles.module.css';
+import RootLayout from './layout'
 function Home() {
   return (
-    <Page className="flex flex-col gap-12">
-      <section className="flex flex-col gap-6">
-        <Text variant="h1">AI Text Summarizer and Chatbot</Text>
-      </section>
+    <Page className={`${styles['home-page']} flex flex-col justify-center items-center m-0 overflow-hidden`} style={{margin:0}}>
+      <div className={`${styles['container']} m-0 overflow-hidden`}>
+        <div className={`${styles['nav-header']} mb-2 overflow-hidden`}>
+          <Text variant="h1">AI Text Summarizer and Chatbot</Text>
+        </div>
 
-      <section className="flex flex-col gap-3">
-        <Text variant="h2"></Text>
-        <div className="lg:w-2/3">
+        <div className={`${styles['chat-container']}  overflow-y-auto w-2/3 m-0`}>
           <Chat />
         </div>
-      </section>
+      </div>
     </Page>
-  )
+  );
 }
+Home.layout = RootLayout
 
-Home.Layout = Layout
-
-export default Home
+export default Home;

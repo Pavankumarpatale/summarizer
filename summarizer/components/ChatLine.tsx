@@ -4,7 +4,7 @@ import Balancer from 'react-wrap-balancer';
 import styles from '../styles/styles.module.css';
 
 // wrap Balancer to remove type errors :( - @TODO - fix this ugly hack
-const BalancerWrapper = (props: any) => <Balancer {...props} />
+const BalancerWrapper = (props: any) => <Balancer {...props} />;
 
 type ChatAgent = 'user' | 'system' | 'assistant';
 
@@ -43,9 +43,7 @@ export function ChatLine({ role = 'assistant', content }: Message) {
         <div className={styles['message-container']}>
           <div className={styles['message-content']}>
             <p className={styles['role-label']}>
-              <a href="#" className={styles['role-link']}>
                 {role === 'assistant' ? 'AI' : 'You'}
-              </a>
             </p>
             <p className={styles['message-text']}>{formattedMessage}</p>
           </div>
