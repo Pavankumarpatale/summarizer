@@ -52,8 +52,6 @@ def summarize_wrapper():
     summary_list = []
     for string in batches:
         summary_list.append(pipe(string, **config)[0]["summary_text"])
-    print(batches)
-    print(summary_list)
     summary = ""
     for i in summary_list:
         summary += i
