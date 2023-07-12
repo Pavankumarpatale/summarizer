@@ -1,4 +1,3 @@
-// Chat.tsx
 import React, { useEffect, useState } from 'react';
 import { Button } from './Button';
 import { ChatLine, LoadingChatLine } from './ChatLine';
@@ -92,7 +91,7 @@ export const Chat: React.FC = () => {
     const last100messages = newMessages.slice(-100); // remember last 100 messages
 
     try {
-      const response = await fetch('http://localhost:8080/summarize/', {
+      const response = await fetch('https://summarize//post request', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
